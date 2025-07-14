@@ -106,6 +106,41 @@ app.get('/allUsers', async (req, res) => {
 		res.status(500).send('Error retrieving users');
 	}
 });
+app.post('/webhookSuprema', express.json(), async (req, res) => {
+	try {
+		const { subid, evento, valor, data } = req.body;
+
+		if (!subid || !evento) return res.status(400).send('Payload inválido');
+
+		if (evento !== 'ftd' && evento !== 'deposit') {
+			return res.status(200).send('Evento ignorado');
+		}
+
+		const [cj, cr, clickId] = subid.split('_');
+		const payload = {
+			event_name: 'EVENT_FIRST_DEPOSIT',
+			click_id: clickId,
+			timestamp: new Date(data || Date.now()).toISOString(),
+			value: valor || 0
+		};
+
+		const response = await fetch('https://ads.kwai.com/mapi/track/event/upload', {
+			method: 'POST',
+			headers: {
+				'Authorization': `Bearer ${process.env.KWAI_TOKEN}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+
+		const responseData = await response.json();
+		console.log('Conversão enviada pro Kwai:', responseData);
+		res.status(200).send('Conversão enviada com sucesso');
+	} catch (err) {
+		console.error('Erro no webhook:', err);
+		res.status(500).send('Erro ao processar webhook');
+	}
+});
 
 app.listen(3000, () => console.log('Server ready on port 3000.'));
 
