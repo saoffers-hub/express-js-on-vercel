@@ -1,13 +1,14 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.method !== 'POST') {
+    return res.status(405).send('Método não permitido');
+  }
+
+  // 👇 Aqui segue a lógica do seu webhook
   const { subid, evento, valor, data } = req.body;
 
   if (!subid || !evento) return res.status(400).send('Payload inválido');
-
-  if (evento !== 'ftd' && evento !== 'deposito') {
-    return res.status(200).send('Evento ignorado');
-  }
 
   const [cj, cr, clickId] = subid.split('_');
 
@@ -28,6 +29,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   });
 
   const responseData = await response.json();
-  console.log('Conversão enviada pro Kwai:', responseData);
-  res.status(200).send('Conversão enviada com sucesso');
+  console.log('Enviado com sucesso:', responseData);
+
+  res.status(200).send('Webhook processado');
 }
