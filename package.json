@@ -2,11 +2,11 @@
   "name": "express",
   "version": "1.0.0",
   "description": "",
-  "main": "api/webhooksuprema.ts",
+  "main": "api/webhooksuprema2.ts",
   "scripts": {
     "dev": "vercel dev",
     "build": "tsc",
-    "start": "node api/webhooksuprema.ts"
+    "start": "node api/webhooksuprema2.ts"
   },
   "keywords": [],
   "author": "",
