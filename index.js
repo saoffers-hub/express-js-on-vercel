@@ -36,9 +36,18 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     });
 
     const text = await response.text();
-    console.log('Resposta do Kwai:', text);
-    return res.status(200).json({ message: 'Conversão enviada com sucesso' });
+    let result;
 
+    try {
+      result = text ? JSON.parse(text) : {};
+    } catch (e) {
+      result = { raw: text };
+    }
+
+    console.log('Payload enviado:', payload);
+    console.log('Resposta do Kwai:', result);
+
+    return res.status(200).json({ message: 'Conversão enviada com sucesso' });
   } catch (err) {
     console.error('Erro ao enviar pro Kwai:', err);
     return res.status(500).json({ message: 'Erro ao processar webhook' });
