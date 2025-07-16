@@ -37,7 +37,6 @@ app.post('/api/webhooksuprema2', async (req, res) => {
 
     const text = await response.text();
     console.log('Resposta do Kwai:', text);
-    console.log('Sucesso:', result);
     return res.status(200).json({ message: 'Conversão enviada com sucesso' });
 
   } catch (err) {
