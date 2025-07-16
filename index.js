@@ -36,14 +36,19 @@ app.post('/api/webhooksuprema2', async (req, res) => {
       body: JSON.stringify(payload),
     });
 
-    const text = await response.text();
-    let result;
-
-    try {
-      result = text ? JSON.parse(text) : {};
-    } catch (e) {
-      result = { raw: text };
-    }
+     const text = await response.text();
+  
+  console.log('STATUS HTTP:', response.status);
+  console.log('HEADERS:', response.headers.raw());
+  console.log('BODY RAW:', text);
+  
+  let result;
+  
+  try {
+    result = text ? JSON.parse(text) : {};
+  } catch (e) {
+    result = { raw: text };
+  }
 
     console.log('Payload enviado:', payload);
     console.log('Resposta do Kwai:', result);
