@@ -1,14 +1,15 @@
 {
-  "name": "webhooksuprema",
+  "name": "webhooksuprema2",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-  "dependencies": {
-    "dotenv": "^16.0.0",
-      "express": "^4.18.2",
-    "node-fetch": "^2.6.1"
-  },
   "scripts": {
     "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.1"
   }
 }
