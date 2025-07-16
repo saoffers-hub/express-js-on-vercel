@@ -23,6 +23,7 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     click_id: clickId,
     timestamp: new Date(data || Date.now()).toISOString(),
     value: valor || 0,
+    trackFlag: true // <- importante pro modo de teste do Kwai
   };
 
   try {
