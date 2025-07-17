@@ -1,66 +1,21 @@
-import express from 'express';
-import cors from 'cors';
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
+curl -X POST "https://www.adsnebula.com/log/common/api" -H "accept: application/json;charset=utf-8" -H "Content-Type: application/json" --data-raw '{
 
-dotenv.config();
+    "access_token": "",
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    "clickid": "==",
 
-app.post('/api/webhooksuprema2', async (req, res) => {
-  const { subid, evento, valor, data } = req.body;
+    "event_name": "EVENT_PURCHASE",
 
-  if (!subid || !evento) {
-    return res.status(400).send('Payload inválido');
-  }
+    "is_attributed": 1,
 
-  const [cj, cr, clickId] = subid.split('_');
+    "mmpcode": "PL",
 
-  const payload = {
-    event_name: 'EVENT_FIRST_DEPOSIT',
-    click_id: clickId,
-    timestamp: new Date(data || Date.now()).toISOString(),
-    value: valor || 0,
-    trackFlag: false // <- importante pro modo de teste do Kwai
-  };
+    "pixelId": "",
 
-  try {
-    const response = await fetch('https://ads.kwai.com/mapi/track/event/upload', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.KWAI_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    "pixelSdkVersion": "9.9.9",
 
-     const text = await response.text();
-  
-  console.log('STATUS HTTP:', response.status);
-  console.log('HEADERS:', response.headers.raw());
-  console.log('BODY RAW:', text);
-  
-  let result;
-  
-  try {
-    result = text ? JSON.parse(text) : {};
-  } catch (e) {
-    result = { raw: text };
-  }
+    "testFlag": false,
 
-    console.log('Payload enviado:', payload);
-    console.log('Resposta do Kwai:', result);
+    "trackFlag": false
 
-    return res.status(200).json({ message: 'Conversão enviada com sucesso' });
-  } catch (err) {
-    console.error('Erro ao enviar pro Kwai:', err);
-    return res.status(500).json({ message: 'Erro ao processar webhook' });
-  }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+}'
