@@ -20,12 +20,12 @@ app.post('/api/webhooksuprema2', async (req, res) => {
   const [cj, cr, clickid] = subid.split('_');
 
   const payload = {
-    access_token: process.env.jyOrCfrY6cfYEAr2yh7jqxBGSK58fS3bkjyLWREx90Y,         // <- token que o Kwai te passou
+    access_token: process.env.NnnZoIHsUvipselp06FMk2wXh9xTmxNoqRj7OXPlRf0,         // <- token que o Kwai te passou
     clickid: clickid,
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
     mmpcode: "PL",
-    pixelId: process.env.284663902209302,           // <- seu pixelId do Kwai
+    pixelId: process.env.284509314416308,           // <- seu pixelId do Kwai
     pixelSdkVersion: "9.9.9",
     testFlag: true,
     trackFlag: true
