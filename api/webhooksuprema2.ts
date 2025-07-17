@@ -1,5 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import fetch from 'node-fetch'; // <- Essencial pra funcionar na Vercel
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log("Webhook recebido!");
@@ -15,28 +18,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const [cj, cr, clickId] = subid.split('_');
+
   const payload = {
-    event_name: 'EVENT_FIRST_DEPOSIT',
-    click_id: clickId,
-    timestamp: new Date(data || Date.now()).toISOString(),
-    value: valor || 0
+    access_token: process.env.KWAI_TOKEN || '',
+    clickid: clickId,
+    event_name: 'EVENT_PURCHASE',
+    is_attributed: 1,
+    mmpcode: 'PL',
+    pixelId: process.env.KWAI_PIXEL_ID || '',
+    pixelSdkVersion: '9.9.9',
+    testFlag: true,
+    trackFlag: true
   };
 
   console.log('Payload montado:', payload);
 
   try {
-    const response = await fetch('https://ads.kwai.com/mapi/track/event/upload', {
+    const response = await fetch('https://www.adsnebula.com/log/common/api', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.KWAI_TOKEN}`,
+        'accept': 'application/json;charset=utf-8',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
-    console.log('Resposta do Kwai:', result);
+    const text = await response.text();
+    let result;
 
+    try {
+      result = text ? JSON.parse(text) : {};
+    } catch (e) {
+      result = { raw: text };
+    }
+
+    console.log('Resposta do Kwai:', result);
     return res.status(200).json({ message: 'Conversão enviada com sucesso', result });
   } catch (err) {
     console.error('Erro ao enviar pro Kwai:', err);
