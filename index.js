@@ -20,7 +20,7 @@ app.post('/api/webhooksuprema2', async (req, res) => {
   const [cj, cr, clickid] = subid.split('_');
 
   const payload = {
-    access_token: process.env.NnnZoIHsUvipselp06FMk2wXh9xTmxNoqRj7OXPlRf0, // <- Token vindo do .env
+    access_token: process.env.KWAI_TOKEN, // <- Token vindo do .env
     clickid: clickid,
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
