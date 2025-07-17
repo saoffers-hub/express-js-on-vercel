@@ -26,7 +26,7 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     mmpcode: 'PL',
     pixelId: process.env.KWAI_PIXEL_ID,
     pixelSdkVersion: '9.9.9',
-    testFlag: false,
+    testFlag: true,
     trackFlag: false
   };
 
