@@ -10,25 +10,24 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/webhooksuprema2', async (req, res) => {
-  const { subid, evento, valor, data } = req.body;
+  const { subid, evento, valor, data, modo_teste } = req.body;
 
   if (!subid || !evento) {
-    return res.status(400).json({ error: 'Payload inválido' });
+    return res.status(400).send('Payload inválido');
   }
 
-  // Pega o clickid da estrutura vindo da Suprema (ex: cj1_cr2_clickid)
   const [cj, cr, clickid] = subid.split('_');
 
   const payload = {
-    access_token: process.env.KWAI_TOKEN, // <- Token vindo do .env
+    access_token: process.env.KWAI_TOKEN,
     clickid: clickid,
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
     mmpcode: "PL",
-    pixelId: process.env.KWAI_PIXEL_ID,   // <- Pixel ID vindo do .env
+    pixelId: process.env.KWAI_PIXEL,
     pixelSdkVersion: "9.9.9",
-    testFlag: true,
-    trackFlag: true
+    testFlag: !!modo_teste,
+    trackFlag: !!modo_teste
   };
 
   try {
@@ -41,27 +40,25 @@ app.post('/api/webhooksuprema2', async (req, res) => {
       body: JSON.stringify(payload)
     });
 
-    const text = await response.text();
+    const resultText = await response.text();
     let result;
-
     try {
-      result = text ? JSON.parse(text) : {};
+      result = resultText ? JSON.parse(resultText) : {};
     } catch (e) {
-      result = { raw: text };
+      result = { raw: resultText };
     }
 
-    console.log('✅ Payload enviado:', payload);
-    console.log('📩 Resposta do Kwai:', result);
+    console.log('Payload enviado:', payload);
+    console.log('Resposta do Kwai:', result);
 
     return res.status(200).json({ message: 'Conversão enviada com sucesso', kwai: result });
-
   } catch (err) {
-    console.error('❌ Erro ao enviar pro Kwai:', err);
-    return res.status(500).json({ message: 'Erro ao processar webhook', error: err });
+    console.error('Erro ao enviar pro Kwai:', err);
+    return res.status(500).json({ message: 'Erro ao processar webhook' });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
