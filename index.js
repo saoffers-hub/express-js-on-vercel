@@ -16,35 +16,43 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     return res.status(400).send('Payload inválido');
   }
 
-  const [cj, cr, clickId] = subid.split('_');
+  // Aqui pegamos o clickid da estrutura subid vinda da Suprema (ex: cj1_cr2_clickid)
+  const [cj, cr, clickid] = subid.split('_');
 
   const payload = {
-    access_token: process.env.KWAI_TOKEN,
-    clickid: clickId,
-    event_name: 'EVENT_PURCHASE', // ou 'EVENT_FIRST_DEPOSIT' se for outro evento
+    access_token: process.env.jyOrCfrY6cfYEAr2yh7jqxBGSK58fS3bkjyLWREx90Y,         // <- token que o Kwai te passou
+    clickid: clickid,
+    event_name: "EVENT_PURCHASE",
     is_attributed: 1,
-    mmpcode: 'PL',
-    pixelId: process.env.KWAI_PIXEL_ID,
-    pixelSdkVersion: '9.9.9',
+    mmpcode: "PL",
+    pixelId: process.env.284663902209302,           // <- seu pixelId do Kwai
+    pixelSdkVersion: "9.9.9",
     testFlag: true,
-    trackFlag: false
+    trackFlag: true
   };
 
   try {
     const response = await fetch('https://www.adsnebula.com/log/common/api', {
       method: 'POST',
       headers: {
-        'accept': 'application/json;charset=utf-8',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'accept': 'application/json;charset=utf-8'
       },
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
+    const text = await response.text();
+    let result;
+    try {
+      result = text ? JSON.parse(text) : {};
+    } catch (e) {
+      result = { raw: text };
+    }
+
     console.log('Payload enviado:', payload);
     console.log('Resposta do Kwai:', result);
 
-    return res.status(200).json({ message: 'Conversão enviada com sucesso', result });
+    return res.status(200).json({ message: 'Conversão enviada com sucesso', kwai: result });
 
   } catch (err) {
     console.error('Erro ao enviar pro Kwai:', err);
