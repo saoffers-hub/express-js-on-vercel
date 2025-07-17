@@ -25,7 +25,7 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
     mmpcode: "PL",
-    pixelId: process.env.284509314416308,   // <- Pixel ID vindo do .env
+    pixelId: process.env.KWAI_PIXEL_ID,   // <- Pixel ID vindo do .env
     pixelSdkVersion: "9.9.9",
     testFlag: true,
     trackFlag: true
