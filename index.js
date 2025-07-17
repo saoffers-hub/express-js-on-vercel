@@ -24,7 +24,7 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
     mmpcode: "PL",
-    pixelId: process.env.KWAI_PIXEL,
+    pixelId: process.env.KWAI_PIXEL_ID,
     pixelSdkVersion: "9.9.9",
     testFlag: !!modo_teste,
     trackFlag: !!modo_teste
