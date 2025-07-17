@@ -13,19 +13,19 @@ app.post('/api/webhooksuprema2', async (req, res) => {
   const { subid, evento, valor, data } = req.body;
 
   if (!subid || !evento) {
-    return res.status(400).send('Payload inválido');
+    return res.status(400).json({ error: 'Payload inválido' });
   }
 
-  // Aqui pegamos o clickid da estrutura subid vinda da Suprema (ex: cj1_cr2_clickid)
+  // Pega o clickid da estrutura vindo da Suprema (ex: cj1_cr2_clickid)
   const [cj, cr, clickid] = subid.split('_');
 
   const payload = {
-    access_token: process.env.NnnZoIHsUvipselp06FMk2wXh9xTmxNoqRj7OXPlRf0,         // <- token que o Kwai te passou
+    access_token: process.env.NnnZoIHsUvipselp06FMk2wXh9xTmxNoqRj7OXPlRf0, // <- Token vindo do .env
     clickid: clickid,
     event_name: "EVENT_PURCHASE",
     is_attributed: 1,
     mmpcode: "PL",
-    pixelId: process.env.284509314416308,           // <- seu pixelId do Kwai
+    pixelId: process.env.284509314416308,   // <- Pixel ID vindo do .env
     pixelSdkVersion: "9.9.9",
     testFlag: true,
     trackFlag: true
@@ -43,24 +43,25 @@ app.post('/api/webhooksuprema2', async (req, res) => {
 
     const text = await response.text();
     let result;
+
     try {
       result = text ? JSON.parse(text) : {};
     } catch (e) {
       result = { raw: text };
     }
 
-    console.log('Payload enviado:', payload);
-    console.log('Resposta do Kwai:', result);
+    console.log('✅ Payload enviado:', payload);
+    console.log('📩 Resposta do Kwai:', result);
 
     return res.status(200).json({ message: 'Conversão enviada com sucesso', kwai: result });
 
   } catch (err) {
-    console.error('Erro ao enviar pro Kwai:', err);
-    return res.status(500).json({ message: 'Erro ao processar webhook' });
+    console.error('❌ Erro ao enviar pro Kwai:', err);
+    return res.status(500).json({ message: 'Erro ao processar webhook', error: err });
   }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
