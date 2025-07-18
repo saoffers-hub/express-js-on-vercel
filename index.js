@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/webhooksuprema2', async (req, res) => {
-  const { subid, evento, valor, data, modo_teste } = req.body;
+  const { subid, evento, valor, data } = req.body;
 
   if (!subid || !evento) {
     return res.status(400).send('Payload inválido');
@@ -26,8 +26,8 @@ app.post('/api/webhooksuprema2', async (req, res) => {
     mmpcode: "PL",
     pixelId: process.env.KWAI_PIXEL_ID,
     pixelSdkVersion: "9.9.9",
-    testFlag: !!modo_teste,
-    trackFlag: !!modo_teste
+    testFlag: false, // <-- SEMPRE FALSE
+    trackFlag: true 
   };
 
   try {
